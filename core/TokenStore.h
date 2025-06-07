@@ -16,6 +16,7 @@ private:
     std::map<std::string, Role> tokenRoleMap;
 
     TokenStore() = default;
+    static TokenStore* s_instance;
 
 public:
     static TokenStore &instance();

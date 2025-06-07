@@ -14,22 +14,22 @@ request: GET /login None {"username": "admin", "password": "123456"}
 response: 500 Internal Server Error
 
 request: POST /login None {"username": "admin", "password": "123456"}
-response: 200 tM6Vs2pvsoXXeBNu
+response: 200 iT7G1K7CBuT4h4kb
 
 request: POST /login None {"username": "user", "password": "123456"}
-response: 200 CGDP3q8GqF4zsTiK
+response: 200 2NuG9LPhGO9C8xtr
 
 TOKEN: 
-- USER: CGDP3q8GqF4zsTiK
-- ADMIN: tM6Vs2pvsoXXeBNu
+- USER: 2NuG9LPhGO9C8xtr
+- ADMIN: iT7G1K7CBuT4h4kb
 
-request: GET /admin tM6Vs2pvsoXXeBNu {}
+request: GET /admin iT7G1K7CBuT4h4kb {}
 response: 200 Welcome, admin VOTIEN!
 
-response: GET /user CGDP3q8GqF4zsTiK {}
+response: GET /user 2NuG9LPhGO9C8xtr {}
 response: 200 Welcome, user VOTIEN!
 
-response: GET /admin CGDP3q8GqF4zsTiK {}
+response: GET /admin 2NuG9LPhGO9C8xtr {}
 response: 500 Internal Server Error
 
 response: GET /user None {}
