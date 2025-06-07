@@ -26,50 +26,54 @@ void TCPServer::run()
             continue;
         }
 
-        char buffer[2048] = {0};
-        int len = recv(clientSocket, buffer, sizeof(buffer), 0);
-        if (len <= 0)
+        // Thay đổi: giữ kết nối với client cho đến khi client đóng
+        while (true)
         {
-            close(clientSocket);
-            continue;
-        }
-        std::string input(buffer, len);
-
-        //! ---------------------------------------------------------
-        Response res;
-        try
-        {
-            Request req = RequestParser::parse(input);
-            std::cout << "Request --------------------" << endl;
-            std::cout << req << endl;
-            if (!AuthMiddleware::authorize(req))
+            char buffer[2048] = {0};
+            int len = recv(clientSocket, buffer, sizeof(buffer), 0);
+            if (len <= 0)
             {
-                res = Response::unauthorized();
+                // Client đóng kết nối hoặc lỗi
+                break;
             }
-            else
+            std::string input(buffer, len);
+
+            //! ---------------------------------------------------------
+            Response res;
+            try
             {
-                auto controller = Router::getController(req);
-                if (controller)
+                Request req = RequestParser::parse(input);
+                std::cout << "Request --------------------" << endl;
+                std::cout << req << endl;
+                if (!AuthMiddleware::authorize(req))
                 {
-                    res = controller->handle(req);
+                    res = Response::unauthorized();
                 }
                 else
                 {
-                    res = Response::error();
+                    auto controller = Router::getController(req);
+                    if (controller)
+                    {
+                        res = controller->handle(req);
+                    }
+                    else
+                    {
+                        res = Response::error();
+                    }
                 }
             }
-        }
-        catch (const std::exception &e)
-        {
-            res = Response::error();
-        }
-        std::cout << "List TOKEN: " << TokenStore::instance();
-        std::cout << "Response --------------------" << endl;
-        std::string output = res.toCS23Format() + "\n";
-        std::cout << "END --------------------" << endl;
-        //! ---------------------------------------------------------
+            catch (const std::exception &e)
+            {
+                res = Response::error();
+            }
+            std::cout << "List TOKEN: " << TokenStore::instance();
+            std::cout << "Response --------------------" << endl;
+            std::string output = res.toCS23Format() + "\n";
+            std::cout << "END --------------------" << endl;
+            //! ---------------------------------------------------------
 
-        send(clientSocket, output.c_str(), output.size(), 0);
+            send(clientSocket, output.c_str(), output.size(), 0);
+        }
         close(clientSocket);
     }
 
