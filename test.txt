@@ -1,0 +1,36 @@
+windown:
+ !!! NO NO NO  
+linux (WSL/docker ubuntu) + MACOS: 
+- chmod +x build.sh
+- ./build.sh
+- ./cs23_server PORT (./cs23_server PORT 8085)
+- telnet localhost PORT (telnet localhost 8085)
+
+
+request: POST /login None {"username": "admin", "password": "1"}
+response: 200 Fail login!!!
+
+request: GET /login None {"username": "admin", "password": "123456"}
+response: 500 Internal Server Error
+
+request: POST /login None {"username": "admin", "password": "123456"}
+response: 200 tM6Vs2pvsoXXeBNu
+
+request: POST /login None {"username": "user", "password": "123456"}
+response: 200 CGDP3q8GqF4zsTiK
+
+TOKEN: 
+- USER: CGDP3q8GqF4zsTiK
+- ADMIN: tM6Vs2pvsoXXeBNu
+
+request: GET /admin tM6Vs2pvsoXXeBNu {}
+response: 200 Welcome, admin VOTIEN!
+
+response: GET /user CGDP3q8GqF4zsTiK {}
+response: 200 Welcome, user VOTIEN!
+
+response: GET /admin CGDP3q8GqF4zsTiK {}
+response: 500 Internal Server Error
+
+response: GET /user None {}
+response: 403 Forbidden
